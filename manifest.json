@@ -1,0 +1,27 @@
+{
+    "dir" : "ltr",
+    "lang" : "en",
+    "name" : "Konfhub",
+    "scope" : "index.html",
+    "display" : "browser",
+    "start_url" : "../src/index.html",
+    "short_name" : "Konfhub",
+    "theme_color" : "#6200EE",
+    "description" : "Participant check-in",
+    "orientation" : "portrait",
+    "background_color" : "#6200EE",
+    
+    "generated" : "true",
+    "icons" : [
+        {
+            "src": "https://result1234.s3.amazonaws.com/qr-scanner/src/images/logo2.png",
+            "sizes": "34x32"
+        },{
+            "src": "https://result1234.s3.amazonaws.com/qr-scanner/src/images/logo2.png",
+            "sizes": "192x192"
+        },
+        {
+            "src": "https://result1234.s3.amazonaws.com/qr-scanner/src/images/logo2.png",
+            "sizes": "512x512"
+        }
+    ]}

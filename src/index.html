@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel='manifest' href='../manifest.json'>
+    <meta name="theme-color" content="#db5945">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/rowreorder/1.2.5/css/rowReorder.dataTables.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.2.3/css/responsive.dataTables.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+  <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+
+    <title>QR Scanner</title>
+</head>
+<style>
+    body{
+        background-image:url("../src/images/light.jpg");
+    }
+    canvas {
+        display: none;
+    }
+    hr {
+        margin-top: 32px;
+    }
+    input[type="file"] {
+        display: block;
+        margin-bottom: 16px;
+    }
+    div {
+        margin-bottom: 16px;
+    }
+    video{
+        width: 100%;
+    }
+    .button{
+        border-radius: 30px;
+        padding: 8px 20px 8px;
+    }
+    video{
+        border-radius: 5px;
+         
+
+    }
+    .w3-button{
+        width:50%!important;
+    }
+    .modal{
+        margin-top: 50%;
+    }
+    .check{
+        border-radius: 30px;
+    }
+
+</style>
+<body>
+        <nav class="navbar navbar-light bg-light">
+                <img src="../src/images/logo2.png" style="height: 50px;float:left;" />
+        </nav>
+
+
+        <div class="w3-container" style="padding: 0px;">
+                <div class="w3-bar w3-black">
+                  <button class="w3-bar-item w3-button tablink w3-teal" onclick="openCity(event,'scan')">Scan QR Code</button>
+                  <button class="w3-bar-item w3-button tablink w3-right" onclick="openCity(event,'view')">Scanned Data</button>  
+                </div>
+                
+                <div id="scan" class="w3-container city" style="padding: 0px;">
+                        <div class="container" style="margin-bottom: 0px">
+                                <div class="row" style="margin-bottom: 0px">
+                                    <div class="col-md-8 col-sm-6">
+                                            <div class="form-inline">
+                                                    <input class="form-control mr-sm-2 button" type="search" placeholder="Type booking id" id="searchBox"  aria-label="Search" style="width: 70%;padding: 18px;" >&nbsp;&nbsp;
+                                                    <button class="btn btn-primary button" type="submit" onclick="searchBoxData();" >Search</button>
+                                            </div>   
+                                    </div>
+                                    <div class="col-md-4 col-sm-6">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                    <div class="col-md-6 col-sm-2">
+                                            <div class="card" style="background-color: transparent;border:none;">
+                                                    <div class="card-body" style="padding: 0rem;">
+                                                            <video  class="live-video" muted playsinline id="qr-video"></video>
+                                                    </div>
+                                                </div>
+                                    </div>
+                                    <!-- <div class="col-md-6">
+                                            <b>Scanned Data: </b><br>
+                                            <span  id="cam-qr-result">-</span>
+                                            <br><br>
+                                     <button  class="btn btn-primary button"  onclick="checkData()" style="border-radius: 30px;" >check</button>
+                                    </div > -->
+                        
+                                </div>
+                              
+                            </div>
+                </div>
+              
+                <div id="view" class="w3-container  city" style="display:none;">
+                        <div class="container">
+                                <div class="row">
+                                      <table id="table" class="display nowrap" style="width:100%">
+                                              <thead>
+                                                  <tr>
+                                                      <th>SL</th>
+                                                      <th>Name</th>
+                                                      <th>Organisation</th>
+                                                      <th>email</th>
+                                                  </tr>
+                                              </thead>
+                                              <tbody id="dataTable">
+                                                
+                                              </tbody>
+                                          </table>
+                                      
+                                </div>
+                            </div>
+                </div>
+              </div>
+
+    <div class="container">
+    
+     <!-- Modal -->
+     <div id="myModal" class="modal">
+
+            <!-- Modal content -->
+            <div class="modal-content">
+              <span class="close" onclick="closeModal()" style="text-align: right;padding: 7px;color: red;">&times;</span>
+              <div class="col-md-6">
+                    <b>Scanned Data:</b><br>
+                    <span  id="cam-qr-result">-</span>
+                    <br><br>
+             <button  class="btn btn-primary button check"  onclick="checkData()"><span class="fa fa-check"></span>&nbspCheck-In</button>
+            </div >  
+            </div>
+          
+          </div>
+          <script>
+              //function onclick(){  
+                var modal = document.getElementById("myModal");   
+                var btn = document.getElementById("myBtn");
+                var span = document.getElementsByClassName("close")[0];
+                            
+                window.onclick = function(event) {
+                  if (event.target == modal) {
+                    modal.style.display = "none";
+                  }
+                }
+            
+          </script>
+          
+<script type="module">
+    import QrScanner from "../qr-scanner.min.js";
+    QrScanner.WORKER_PATH = '../qr-scanner-worker.min.js';
+
+    const video = document.getElementById('qr-video');
+   
+    const camQrResult = document.getElementById('cam-qr-result');
+    
+    const fileQrResult = document.getElementById('file-qr-result');
+
+    function setResult(label, result) {
+        label.textContent = result;
+        label.style.color = 'red';
+        clearTimeout(label.highlightTimeout);
+        label.highlightTimeout = setTimeout(() => label.style.color = 'inherit', 200);
+        adddata();
+    }
+
+    const scanner = new QrScanner(video, result => setResult(camQrResult, result));  
+    scanner.start();
+
+ var _pdata = [];
+
+    function adddata(){
+        
+        var idData = document.getElementById("cam-qr-result").innerHTML;
+        console.log(idData);
+       
+       if (_pdata[0] == null || _pdata[0] == "" || _pdata[0] == "null"){
+        var index = _pdata.findIndex(x => x == idData)
+            if (index === -1){
+                    _pdata.push(idData);         
+            }
+            else console.log("object already exists")
+            showdataon();
+                }
+                else{
+                  
+                    showdataon();
+                }
+            }
+        
+     function showdataon(){ 
+        console.log(_pdata);   
+        localStorage.setItem("scanData",_pdata);
+        //scanner.stop();
+        //checkData();
+        $("#myModal").show();
+        
+
+     }  
+</script>
+<script>
+
+// This is the "Offline page" service worker
+
+// Add this below content to your HTML page, or add the js file to your page at the very top to register service worker
+
+// Check compatibility for the browser we're running this in
+// This is the service worker with the Advanced caching
+
+// Add this below content to your HTML page, or add the js file to your page at the very top to register service worker
+
+// Check compatibility for the browser we're running this in
+if ("serviceWorker" in navigator) {
+  if (navigator.serviceWorker.controller) {
+    console.log("[PWA Builder] active service worker found, no need to register");
+  } else {
+    // Register the service worker
+    navigator.serviceWorker
+      .register("../pwabuilder-sw.js", {
+        scope: "./"
+      })
+      .then(function (reg) {
+        console.log("[PWA Builder] Service worker has been registered for scope: " + reg.scope);
+      });
+  }
+}
+
+
+</script>
+
+<script>
+        function openCity(evt, cityName) {
+          var i, x, tablinks;
+          x = document.getElementsByClassName("city");
+          for (i = 0; i < x.length; i++) {
+            x[i].style.display = "none";
+          }
+          tablinks = document.getElementsByClassName("tablink");
+          for (i = 0; i < x.length; i++) {
+            tablinks[i].className = tablinks[i].className.replace(" w3-teal", "");
+          }
+          document.getElementById(cityName).style.display = "block";
+          evt.currentTarget.className += " w3-teal";
+        }
+        </script>
+        <script>
+        $(document).ready(function() {
+        var table = $('#table').DataTable( {
+        rowReorder: {
+            selector: 'td:nth-child(2)'
+        },
+        responsive: true
+         } );
+          } );
+ </script>
+<script src="./main.js"></script>
+<script src='https://code.jquery.com/jquery-3.3.1.js'></script>
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<!-- <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script> -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
+<script src='https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js'></script>
+<script src='https://cdn.datatables.net/rowreorder/1.2.5/js/dataTables.rowReorder.min.js'></script>
+<script src='https://cdn.datatables.net/responsive/2.2.3/js/dataTables.responsive.min.js'></script>
+<script src='https://kit.fontawesome.com/a076d05399.js'></script>
+</body>
+</html>
